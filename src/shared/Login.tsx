@@ -4,8 +4,6 @@ import userIcon from "../assets/images/AuthenticationIcons/user-icon.png";
 import passwordIcon from "../assets/images/AuthenticationIcons/password-icon.png";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { supabaseClient } from "@/supabase/connection";
-import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 const schema = z.object({
@@ -25,29 +23,22 @@ const Login: React.FC = () => {
     resolver: zodResolver(schema),
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data, error } = await supabaseClient.auth.getSession();
-      if (error) {
-        console.log(error);
-      }
-      console.log(data.session?.provider_token);
-    };
-    fetchData();
-  }, []);
-
   return (
-    <div className="lg:mt-36 self-center flex flex-col justify-center items-center space-y-5 w-full h-full">
-      <img src={profileIcon} alt="Profile Icon" className="w-10 self-center" />
-      <h1 className="text-2xl text-orange-primary-1 whitespace-nowrap">
-        Login
-      </h1>
-      <div className="w-11/12 md:w-3/4 lg:w-[400px]  inset-6 flex items-center justify-center">
+    <div className="lg:mt-36 self-center flex flex-col justify-center items-center gap-5 w-full">
+      <div className="flex flex-col justify-center items-center gap-3">
+        <img
+          src={profileIcon}
+          alt="Profile Icon"
+          className="w-10 self-center my-4"
+        />
+        <h1 className="text-2xl text-orange-primary-1">Login</h1>
+      </div>
+      <div className=" w-11/12 md:w-3/4 lg:w-[400px]  flex items-center justify-center mt-5">
         <form className="flex flex-col gap-4 w-full">
-          <div className="flex justify-between items-center bg-[#AAE9E3] placeholder-orange-primary-1 rounded-full w-full h-12 text-orange-primary-1">
+          <div className="flex justify-between items-center bg-[#AAE9E3] placeholder-orange-primary-1 rounded-full w-full pr-4 h-12 text-orange-primary-1">
             <input
               {...register("email")}
-              className="px-5 border-none outline-none focus:outline-none focus:ring-0 bg-transparent  placeholder-orange-primary-1 "
+              className="px-5 border-none outline-none focus:outline-none focus:ring-0 bg-transparent  placeholder-gray-600 text-gray-600 w-full"
               placeholder="Email"
             />
             <img src={userIcon} alt="Icon" className="w-5 mr-4" />
@@ -56,43 +47,37 @@ const Login: React.FC = () => {
             <div className="text-red-500 text-xs">{errors.email.message}</div>
           )}
 
-          <div className="flex justify-between items-center bg-[#AAE9E3] placeholder-orange-primary-1 rounded-full w-full h-12 text-orange-primary-1">
+          <div className="flex justify-between items-center bg-[#AAE9E3] placeholder-orange-primary-1 rounded-full w-full pr-4 h-12 text-orange-primary-1">
             <input
               {...register("password")}
-              className="px-5 border-none outline-none focus:outline-none focus:ring-0 bg-transparent  placeholder-orange-primary-1"
+              type="password"
+              className="px-5 border-none outline-none focus:outline-none focus:ring-0 bg-transparent  placeholder-gray-600 text-gray-600 w-full"
               placeholder="Password"
             />
-            <img src={passwordIcon} alt="Icon" className="w-5 mr-4" />
+            <img src={passwordIcon} alt="Icon" className="w-5 " />
           </div>
           {errors.password && (
             <div className="text-red-500 text-xs">
               {errors.password.message}
             </div>
           )}
-          <div className="flex items-center gap-3 w-full">
-            <label className="flex items-center space-x-2 ">
-              <input
-                type="radio"
-                name="option"
-                value="rememberMe"
-                className="form-radio text-orange-primary-1 focus:ring-0"
-              />
-              <span className="text-orange-primary-2">Remember Me</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="option"
-                value="forget"
-                className="form-radio text-orange-primary-1 focus:ring-0"
-              />
-              <span className="text-orange-primary-2">Forget password</span>
-            </label>
-          </div>
+          {/* <div className="flex justify-start items-center gap-3 w-full my-4"> */}
+          {/* </div> */}
 
-          <div className="text-center my-5">
-            <Button name="Login" />
+          <div className="text-center !mt-6 !mb-2">
+            <Button
+              type="button"
+              className="bg-[#ff9f1c] w-28 py-1 rounded-lg hover:bg-[#ff9f1c] cursor-pointer tracking-wider text-base hover:shadow-lg hover:scale-105 hover:ease-in-out hover:delay-200"
+            >
+              Login
+            </Button>
           </div>
+          <button
+            type="button"
+            className="text-[#FFB941]  !mb-4 hover:underline"
+          >
+            Forget password
+          </button>
         </form>
       </div>
     </div>
