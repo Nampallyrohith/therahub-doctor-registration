@@ -24,7 +24,7 @@ const Login: React.FC = () => {
   });
 
   return (
-    <div className="lg:mt-36 self-center flex flex-col justify-center items-center gap-5 w-full">
+    <div className="self-center flex flex-col justify-center items-center gap-5 w-full">
       <div className="flex flex-col justify-center items-center gap-3">
         <img
           src={profileIcon}
@@ -33,7 +33,7 @@ const Login: React.FC = () => {
         />
         <h1 className="text-2xl text-orange-primary-1">Login</h1>
       </div>
-      <div className=" w-11/12 md:w-3/4 lg:w-[400px]  flex items-center justify-center mt-5">
+      <div className=" w-3/4 md:w-3/5 lg:w-[400px]  flex items-center justify-center mt-5">
         <form className="flex flex-col gap-4 w-full">
           <div className="flex justify-between items-center bg-[#AAE9E3] placeholder-orange-primary-1 rounded-full w-full pr-4 h-12 text-orange-primary-1">
             <input
