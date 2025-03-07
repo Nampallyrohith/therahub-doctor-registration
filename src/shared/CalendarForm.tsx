@@ -16,7 +16,7 @@ const CalendarForm = () => {
 
   return (
     <div className="w-11/12 mx-auto lg:w-[70%] min-h-[400px]  bg-[#CBF6EF] p-5 rounded-xl shadow-inset !mb-5">
-      <div className="flex justify-around items-center">
+      <div className="flex flex-col md:flex-row justify-around items-center">
         <div>
           <p className="text-[#2CC3B4] text-center">Select date</p>
           <Calendar
@@ -29,7 +29,7 @@ const CalendarForm = () => {
         </div>
 
         {dates.length !== 0 && (
-          <div className="w-[45%]">
+          <div className="w-full !mt-5 md:mt-0 md:w-[45%]">
             <p className="text-[#2CC3B4] text-center">Leave purpose</p>
 
             <form
