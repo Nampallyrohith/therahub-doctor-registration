@@ -15,7 +15,7 @@ const CalendarForm = () => {
   };
 
   return (
-    <div className="w-3/4 min-h-[400px] mx-auto  bg-[#CBF6EF] p-5 rounded-xl  shadow-inset  ">
+    <div className="w-11/12 mx-auto lg:w-[70%] min-h-[400px]  bg-[#CBF6EF] p-5 rounded-xl shadow-inset !mb-5">
       <div className="flex justify-around items-center">
         <div>
           <p className="text-[#2CC3B4] text-center">Select date</p>
