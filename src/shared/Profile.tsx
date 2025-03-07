@@ -110,10 +110,10 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full min-h-screen">
+    <div className="w-full mx-auto lg:w-[72%] p-5 rounded-xl !mt-36  ">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative bg-[#CBF6EF] rounded-2xl mx-3 space-y-4 p-6 shadow-lg w-11/12 text-sm md:w-[900px]"
+        className="relative bg-[#CBF6EF] rounded-2xl mx-3 p-6 shadow-inset"
       >
         {!isEditing && (
           <button
@@ -149,22 +149,26 @@ const Profile = () => {
             className="hidden"
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-5">
-          <div className="flex gap-2">
+        <div
+          className={`grid grid-cols-1 ${
+            isEditing ? " xl:grid-cols-2" : " md:grid-cols-1 xl:grid-cols-2"
+          } gap-4 !my-5 `}
+        >
+          <div className="flex flex-col md:flex-row gap-2 w-full">
             <label className="text-[#FF9F1C]">Name:</label>
             {isEditing ? (
               <input
                 {...register("name", {
                   required: "Name is required",
                 })}
-                className="border-b-2 border-[#2EC4B6] text-[#2EC4B6]"
+                className="border-b-2 outline-none border-[#2EC4B6] text-[#2EC4B6]"
               />
             ) : (
               <p className="text-[#2EC4B6]">{watch("name") || user.name}</p>
             )}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row  gap-2 w-full">
             <label className="text-[#FF9F1C]">Qualification:</label>
             {isEditing ? (
               <select
@@ -187,19 +191,19 @@ const Profile = () => {
             )}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row  gap-2 w-full">
             <label className="text-[#FF9F1C]">Email:</label>
             <p className="text-[#2EC4B6]">{watch("email") || user.email}</p>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row  gap-2 w-full">
             <label className="text-[#FF9F1C]">Specialist In:</label>
             {isEditing ? (
               <input
                 {...register("specialist", {
                   required: "Specialist is required",
                 })}
-                className="border-b-2 border-[#2EC4B6] text-[#2EC4B6]"
+                className="border-b-2 outline-none border-[#2EC4B6] text-[#2EC4B6]"
               />
             ) : (
               <p className="text-[#2EC4B6]">
@@ -208,7 +212,7 @@ const Profile = () => {
             )}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row  gap-2 w-full">
             <label className="text-[#FF9F1C]">Gender:</label>
             {isEditing ? (
               <select
@@ -224,7 +228,7 @@ const Profile = () => {
             )}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row  gap-2 w-full">
             <label className="text-[#FF9F1C]">Therapy ID:</label>
             {isEditing ? (
               <select
@@ -247,7 +251,7 @@ const Profile = () => {
             )}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row  gap-2 w-full">
             <label className="text-[#FF9F1C]">Age:</label>
             {isEditing ? (
               <input
@@ -258,7 +262,7 @@ const Profile = () => {
                     message: "Age must be a number",
                   },
                 })}
-                className="bg-transparent border-0 border-b-[#2EC4B6] focus:border-b-green-primary-1 focus:ring-0  border-b-2 text-[#2EC4B6]"
+                className="bg-transparent outline-none border-0 border-b-[#2EC4B6] focus:border-b-green-primary-1 focus:ring-0  border-b-2 text-[#2EC4B6]"
                 type="text"
               />
             ) : (
@@ -269,14 +273,14 @@ const Profile = () => {
             )}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row  gap-2 w-full">
             <label className="text-[#FF9F1C]">Experience:</label>
             {isEditing ? (
               <input
                 {...register("experience", {
                   required: "Experience is required",
                 })}
-                className="border-b-2 border-[#2EC4B6] text-[#2EC4B6]"
+                className="border-b-2 outline-none border-[#2EC4B6] text-[#2EC4B6]"
               />
             ) : (
               <p className="text-[#2EC4B6]">
@@ -284,17 +288,20 @@ const Profile = () => {
               </p>
             )}
           </div>
-          <div className="flex pt-5 gap-2">
-            <label className="text-[#FF9F1C]">About Me:</label>
-            {isEditing ? (
-              <textarea
-                {...register("about", { required: "About is required" })}
-                className="w-full bg-transparent border-0 border-b-[#2EC4B6] focus:border-b-[#2EC4B6] focus:ring-0  border-b-2 text-[#2EC4B6] h-auto"
-              />
-            ) : (
-              <p className="text-[#2EC4B6]">{watch("about") || user.about}</p>
-            )}
-          </div>
+        </div>
+        <div className="flex flex-col w-full">
+          <label className="text-[#FF9F1C] ">About Me:</label>
+          {isEditing ? (
+            <textarea
+              cols={6}
+              {...register("about", { required: "About is required" })}
+              className="bg-transparent w-full border-0 border-b-[#2EC4B6] focus:border-b-[#2EC4B6] focus:ring-0 outline-none  border-b-2 text-[#2EC4B6] h-auto"
+            />
+          ) : (
+            <p className="text-[#2EC4B6] w-full break-words">
+              {watch("about") || user.about}
+            </p>
+          )}
         </div>
 
         {isEditing && (
@@ -316,8 +323,8 @@ const Profile = () => {
           </div>
         )}
         {isEditing && (
-          <p className="italic text-green-700 text-xs">
-            *Note: Name and email cannot be changed.
+          <p className="italic text-green-700 text-xs !mt-4">
+            *Note: Email cannot be changed, once it registered.
           </p>
         )}
       </form>
