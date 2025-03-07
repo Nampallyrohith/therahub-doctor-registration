@@ -1,13 +1,17 @@
 import Authentication from "./components/routes/Authentication";
 import Dashboard from "./components/routes/Dashboard";
 import { Route, Routes } from "react-router-dom";
+import Header from "./shared/Header";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/authenication" element={<Authentication />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-    </Routes>
+    <>
+      <Header />
+      <Routes>
+        <Route path="/authenication" element={<Authentication />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </>
   );
 }
 
