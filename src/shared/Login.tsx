@@ -7,15 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { LoginSchema } from "@/modals/typeDefinitions";
 import { ThreeDot } from "react-loading-indicators";
+import { loginSchema } from "@/modals/schema";
 
-const schema = z.object({
-  email: z.string().email(),
-  password: z
-    .string()
-    .min(8, { message: "Password must contain at least 8 character(s)" }),
-});
-
-type Inputs = z.infer<typeof schema>;
+type Inputs = z.infer<typeof loginSchema>;
 
 interface loginProps {
   onSubmit: (data: LoginSchema) => void;
@@ -28,7 +22,7 @@ const Login: React.FC<loginProps> = ({ onSubmit, loading }) => {
     formState: { errors },
     handleSubmit,
   } = useForm<Inputs>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(loginSchema),
   });
 
   const loginSubmit: SubmitHandler<Inputs> = (data) => {
@@ -85,7 +79,11 @@ const Login: React.FC<loginProps> = ({ onSubmit, loading }) => {
               type="submit"
               className="bg-[#ff9f1c] w-28 py-1 rounded-lg hover:bg-[#ff9f1c] cursor-pointer tracking-wider text-base hover:shadow-lg hover:scale-105 hover:ease-in-out hover:delay-200"
             >
-              {loading ? <ThreeDot easing="ease-in" size="small" color="#fff" /> : "Login"}
+              {loading ? (
+                <ThreeDot easing="ease-in" size="small" color="#fff" />
+              ) : (
+                "Login"
+              )}
             </Button>
           </div>
           <button

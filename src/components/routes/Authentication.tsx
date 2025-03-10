@@ -17,8 +17,22 @@ const Authentication = () => {
   );
   const [signupSuccess, setSignUpSuccess] = useState<boolean>(false);
 
-  const { call: loginAPICaller, loading: loginLoading } = useFetchData();
+  const { call: loginAPICaller, loading: loginLoading } = useFetchData<{
+    token: string;
+    doctor: {
+      id: string;
+      fullName: string;
+      email: string;
+    };
+  }>();
   const { call: signUpAPICaller, loading: signUpLoading } = useFetchData();
+
+  useEffect(() => {
+    const token = localStorage.getItem("doctorToken");
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, []);
 
   useEffect(() => {
     navigate(isLogin ? "?login" : "?signup", { replace: true });
@@ -39,6 +53,8 @@ const Authentication = () => {
       });
       return;
     }
+
+    localStorage.setItem("doctorToken", response.data.token);
 
     setTimeout(() => {
       navigate("/dashboard");
