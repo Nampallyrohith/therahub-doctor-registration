@@ -3,30 +3,28 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
 interface ApiResponse<T> {
   data: T;
   error?: string;
+  ok: boolean;
 }
 export const fetchData = async <T>(
   endpoint: string,
   method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
   body?: any
-): Promise<ApiResponse<T>> => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    });
+): Promise<ApiResponse<T> & { ok: boolean }> => {
+  const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
 
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status} ${response.statusText}`);
-    }
+  const data = method === "DELETE" ? null : await response.json();
 
-    const data = method === "DELETE" ? null : await response.json();
-    return { data };
-  } catch (error: any) {
-    return { data: null as any, error: error.message };
+  if (data.message) {
+    return { data, ok: response.ok || true };
   }
+
+  return { data: null as any, error: data.error, ok: false };
 };
 
 // sample code how to use this API in integrating.
