@@ -13,8 +13,8 @@ const LeaveTabs = () => {
             key={tab}
             className={`px-4 py-2 text-lg font-semibold ${
               activeTab === tab
-                ? "bg-[#FF9F1C] text-white md:bg-transparent md:text-[#FF9F1C]"
-                : "text-[#2EC4B6] border-2 border-[#2EC4B6] md:border-none"
+                ? "bg-[#FF9F1C] text-white md:bg-transparent md:text-[#FF9F1C] rounded-3xl"
+                : "text-[#2EC4B6] border-2 border-[#2EC4B6] rounded-3xl md:border-none"
             }`}
             onClick={() => setActiveTab(tab)}
           >
