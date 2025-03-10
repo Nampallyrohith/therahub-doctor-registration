@@ -26,26 +26,3 @@ export const fetchData = async <T>(
 
   return { data: null as any, error: data.error, ok: false };
 };
-
-// sample code how to use this API in integrating.
-
-// // GET API
-//   const { data, error, loading } = useFetchData<User[]>("users");
-
-// // POST API
-//   const createUser = async () => {
-//     const result = await fetchData<User>("users", "POST", { name: "John Doe" });
-//     console.log(result);
-//   };
-
-// //   PUT API
-//   const updateUser = async () => {
-//     const result = await fetchData<User>("users/1", "PUT", { name: "Jane Doe" });
-//     console.log(result);
-//   };
-
-// //   DELETE API
-//   const deleteUser = async () => {
-//     const result = await fetchData<null>("users/1", "DELETE");
-//     console.log(result);
-//   };
