@@ -8,20 +8,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { SignUpSchema } from "@/modals/typeDefinitions";
 import { ThreeDot } from "react-loading-indicators";
+import { signUpSchema } from "@/modals/schema";
 
-const schema = z
-  .object({
-    fullName: z.string().nonempty("Full Name is required"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-type Inputs = z.infer<typeof schema>;
+type Inputs = z.infer<typeof signUpSchema>;
 
 interface singupProps {
   onSubmit: (data: SignUpSchema) => void;
@@ -34,7 +23,7 @@ const SignUp: React.FC<singupProps> = ({ onSubmit, loading }) => {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(signUpSchema),
   });
 
   const SignUpSubmit: SubmitHandler<Inputs> = (data) => {
