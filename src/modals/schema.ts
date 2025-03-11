@@ -4,11 +4,11 @@ export const Doctorschema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   email: z.string().min(1, { message: "Email is required" }).email(),
   phone: z.string().min(1, { message: "Mobile number is required" }),
-  age: z.string().min(1, "Age is required"),
+  age: z.number(),
   qualification: z.string().min(1, { message: "Qualification is required" }),
   about: z.string().min(1, { message: "Bio is required" }),
   specialistIn: z.string().min(1, { message: "Specialisation is required" }),
-  experience: z.string().min(1, { message: "Year of experience is required" }),
+  experience: z.number(),
   therapyId: z.enum([
     "behavioural",
     "psychodynamic",

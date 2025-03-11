@@ -18,11 +18,11 @@ export interface Doctor {
   email: string;
   gender: string;
   phone: string;
-  age: string;
+  age: number;
   qualification: string;
   about: string;
   specialistIn: string;
-  experience: string;
+  experience: number;
   therapyId: therapyIdEnum;
   avatarUrl: string;
 }

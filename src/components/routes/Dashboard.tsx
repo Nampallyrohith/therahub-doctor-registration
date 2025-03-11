@@ -39,10 +39,11 @@ const Dashboard = () => {
   };
 
   const handleProfileSubmit = async (data: Doctor) => {
+    console.log(typeof data.age);
     const response = await profileUpdateAPICaller(
       `doctor/profile-details/${doctorId}`,
       "PUT",
-      data
+      { ...data, age: Number(data.age), experience: Number(data.experience) }
     );
 
     if (!response.ok) {
@@ -59,7 +60,7 @@ const Dashboard = () => {
     });
   };
   return (
-    <>
+    <div className="w-full h-full">
       <Header />
       {doctorLoading ? (
         <Loader />
@@ -74,7 +75,7 @@ const Dashboard = () => {
           {doctorResult && doctorResult.doctor.isProfile && <CalendarForm />}
         </div>
       )}
-    </>
+    </div>
   );
 };
 
