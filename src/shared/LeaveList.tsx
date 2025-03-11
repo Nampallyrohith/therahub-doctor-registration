@@ -11,9 +11,9 @@ const LeaveTabs = () => {
         {tabs.map((tab) => (
           <button
             key={tab}
-            className={`px-4 py-2 text-lg font-semibold ${
+            className={`px-3 py-2 font-semibold text-sm md:text-base tracking-widest ${
               activeTab === tab
-                ? "bg-[#FF9F1C] text-white md:bg-transparent md:text-[#FF9F1C] rounded-3xl"
+                ? "bg-[#FF9F1C] text-white md:bg-transparent md:text-[#FF9F1C] md:border-b-2 md:border-0 md:border-b-[#FF9F1C] md:rounded-none rounded-3xl"
                 : "text-[#2EC4B6] border-2 border-[#2EC4B6] rounded-3xl md:border-none"
             }`}
             onClick={() => setActiveTab(tab)}
