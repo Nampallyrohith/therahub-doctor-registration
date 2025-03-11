@@ -1,26 +1,24 @@
-//import { Button } from "@/components/ui/button";
-//import { Input } from "@/components/ui/input";
+import { Doctor, DoctorProfile } from "@/modals/typeDefinitions";
 import { supabaseClient } from "@/supabase/connection";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
+import { toast } from "sonner";
 import { FaPen } from "react-icons/fa";
+import { ThreeDot } from "react-loading-indicators";
 
-const Profile = () => {
-  type User = {
-    name: string;
-    email: string;
-    gender: string;
-    phone: string;
-    age: string;
-    qualification: string;
-    about: string;
-    specialist: string;
-    experience: string;
-    therapyId: string;
-    avatarUrl?: string;
-  };
+interface profileProps {
+  onSubmitProfile: (data: Doctor) => void;
+  doctor: DoctorProfile | undefined;
+  loading: boolean;
+  doctorId: string;
+}
 
+const Profile: React.FC<profileProps> = ({
+  onSubmitProfile,
+  loading,
+  doctor,
+  doctorId,
+}) => {
   const Qualifications = [
     "Bachelor’s Degree in Psychology",
     "Master’s Degree in Psychology",
@@ -28,29 +26,13 @@ const Profile = () => {
     "Doctor of Philosophy in Psychology",
   ];
   const TherapistID = [
-    "Psychodynamic Therapy",
-    "Behavioral Therapy",
-    "Coginative Behavioral Therapy",
-    "Humanistic Therapy",
+    "physodynamic",
+    "behavioral",
+    "cognitiveBehavioural",
+    "humanistic",
   ];
   const [isEditing, setIsEditing] = useState(false);
-  const [avatar, setAvatar] = useState<string>(
-    "https://via.placeholder.com/100"
-  );
   const [file, setFile] = useState<File | null>(null);
-  const [user, setUser] = useState<User>({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    gender: "Male",
-    phone: "1234567890",
-    age: "29",
-    qualification: "Master’s Degree in Psychology",
-    specialist: "Cardiologist",
-    experience: "5 Years",
-    about: "I am a cardiologist with 5 years of experience.",
-    therapyId: "Psychodynamic Therapy",
-    avatarUrl: "https://via.placeholder.com/100",
-  });
 
   const {
     register,
@@ -58,27 +40,30 @@ const Profile = () => {
     formState: { errors },
     reset,
     watch,
-  } = useForm<User>();
-
+    setValue,
+  } = useForm<Doctor>();
   useEffect(() => {
-    reset(user);
-  }, [user, reset]);
+    if (doctor) {
+      reset(doctor);
+    }
+  }, [doctor, reset]);
 
-  const onSubmit = (data: User) => {
-    setUser(data);
+  const onSubmit = async (data: Doctor) => {
+    console.log(data);
+
+    if (file) {
+      const newAvatarUrl = await uploadAvatar();
+      if (newAvatarUrl) {
+        data.avatarUrl = newAvatarUrl;
+      }
+    }
+
     setIsEditing(false);
-    toast.success("Profile updated", {
-      duration: 3000,
-      style: {
-        backgroundColor: "#1f5d5d",
-        color: "#fff",
-        fontWeight: 700,
-      },
-    });
+    onSubmitProfile(data);
   };
 
   const handleCancel = () => {
-    reset(user);
+    reset();
     setIsEditing(false);
   };
 
@@ -88,25 +73,25 @@ const Profile = () => {
     }
   };
 
-  const uploadAvatar = async () => {
-    if (file) {
-      const filePath = `doctors/1/${file.name}`;
-      const { error } = await supabaseClient.storage
-        .from("doc_avatars")
-        .upload(filePath, file, { cacheControl: "3600", upsert: true });
+  const uploadAvatar = async (): Promise<string | null> => {
+    if (!file) return null;
 
-      if (error) {
-        toast("Upload failed");
-        return;
-      }
+    const filePath = `doctors/${doctorId}/${file.name}`;
+    const { error } = await supabaseClient.storage
+      .from("doc_avatars")
+      .upload(filePath, file, { cacheControl: "3600", upsert: true });
 
-      // Get public URL
-      const { data } = supabaseClient.storage
-        .from("doc_avatars")
-        .getPublicUrl(filePath);
-      setAvatar(data.publicUrl);
-      toast("Avatar updated");
+    if (error) {
+      toast("Upload failed");
+      return null;
     }
+
+    // Get public URL
+    const { data } = supabaseClient.storage
+      .from("doc_avatars")
+      .getPublicUrl(filePath);
+    setValue("avatarUrl", data.publicUrl);
+    return data.publicUrl; // ✅ Return URL
   };
 
   return (
@@ -128,7 +113,7 @@ const Profile = () => {
         <div className="flex flex-col items-center">
           <div className="relative w-24 h-24">
             <img
-              src={avatar}
+              src={watch("avatarUrl")}
               className="w-24 h-24 rounded-full object-cover bg-gray-100"
               alt="Profile"
             />
@@ -144,10 +129,14 @@ const Profile = () => {
           <input
             id="fileInput"
             type="file"
+            {...register("avatarUrl")}
             accept="image/*"
             onChange={handleFileChange}
             className="hidden"
           />
+          {errors.avatarUrl && (
+            <p className="text-red-500 text-xs">{errors.avatarUrl.message}</p>
+          )}
         </div>
         <div
           className={`grid grid-cols-1 ${
@@ -164,7 +153,10 @@ const Profile = () => {
                 className="border-b-2 outline-none border-[#2EC4B6] text-[#2EC4B6]"
               />
             ) : (
-              <p className="text-[#2EC4B6]">{watch("name") || user.name}</p>
+              <p className="text-[#2EC4B6]">{watch("name")}</p>
+            )}
+            {errors.name && (
+              <p className="text-red-500 text-xs">{errors.name.message}</p>
             )}
           </div>
 
@@ -185,29 +177,35 @@ const Profile = () => {
                 ))}
               </select>
             ) : (
-              <p className="text-[#2EC4B6]">
-                {watch("qualification") || user.qualification}
+              <p className="text-[#2EC4B6]">{watch("qualification")}</p>
+            )}
+            {errors.qualification && (
+              <p className="text-red-500 text-xs">
+                {errors.qualification.message}
               </p>
             )}
           </div>
 
           <div className="flex flex-col md:flex-row  gap-2 w-full">
             <label className="text-[#FF9F1C]">Email:</label>
-            <p className="text-[#2EC4B6]">{watch("email") || user.email}</p>
+            <p className="text-[#2EC4B6]">{watch("email")}</p>
           </div>
 
           <div className="flex flex-col md:flex-row  gap-2 w-full">
             <label className="text-[#FF9F1C]">Specialist In:</label>
             {isEditing ? (
               <input
-                {...register("specialist", {
+                {...register("specialistIn", {
                   required: "Specialist is required",
                 })}
                 className="border-b-2 outline-none border-[#2EC4B6] text-[#2EC4B6]"
               />
             ) : (
-              <p className="text-[#2EC4B6]">
-                {watch("specialist") || user.specialist}
+              <p className="text-[#2EC4B6]">{watch("specialistIn")}</p>
+            )}
+            {errors.specialistIn && (
+              <p className="text-red-500 text-xs">
+                {errors.specialistIn.message}
               </p>
             )}
           </div>
@@ -224,7 +222,10 @@ const Profile = () => {
                 <option value="Other">Other</option>
               </select>
             ) : (
-              <p className="text-[#2EC4B6]">{watch("gender") || user.gender}</p>
+              <p className="text-[#2EC4B6]">{watch("gender")}</p>
+            )}
+            {errors.gender && (
+              <p className="text-red-500 text-xs">{errors.gender.message}</p>
             )}
           </div>
 
@@ -245,9 +246,10 @@ const Profile = () => {
                 ))}
               </select>
             ) : (
-              <p className="text-[#2EC4B6]">
-                {watch("therapyId") || user.therapyId}
-              </p>
+              <p className="text-[#2EC4B6]">{watch("therapyId")}</p>
+            )}
+            {errors.therapyId && (
+              <p className="text-red-500 text-xs">{errors.therapyId.message}</p>
             )}
           </div>
 
@@ -266,7 +268,7 @@ const Profile = () => {
                 type="text"
               />
             ) : (
-              <p className="text-[#2EC4B6]">{watch("age") || user.age}</p>
+              <p className="text-[#2EC4B6]">{watch("age")}</p>
             )}
             {errors.age && (
               <p className="text-red-500 text-xs">{errors.age.message}</p>
@@ -277,14 +279,18 @@ const Profile = () => {
             <label className="text-[#FF9F1C]">Experience:</label>
             {isEditing ? (
               <input
+                type="text"
                 {...register("experience", {
                   required: "Experience is required",
                 })}
                 className="border-b-2 outline-none border-[#2EC4B6] text-[#2EC4B6]"
               />
             ) : (
-              <p className="text-[#2EC4B6]">
-                {watch("experience") || user.experience}
+              <p className="text-[#2EC4B6]">{watch("experience")}</p>
+            )}
+            {errors.experience && (
+              <p className="text-red-500 text-xs">
+                {errors.experience.message}
               </p>
             )}
           </div>
@@ -299,8 +305,11 @@ const Profile = () => {
             />
           ) : (
             <p className="text-[#2EC4B6] w-full break-words">
-              {watch("about") || user.about}
+              {watch("about")}
             </p>
+          )}
+          {errors.about && (
+            <p className="text-red-500 text-xs">{errors.about.message}</p>
           )}
         </div>
 
@@ -315,10 +324,13 @@ const Profile = () => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-teal-600 text-white rounded-md"
-              onClick={uploadAvatar}
+              className="px-4 py-2 cursor-pointer bg-teal-600 text-white rounded-md"
             >
-              Save
+              {loading ? (
+                <ThreeDot easing="ease-in" size="small" color="#fff" />
+              ) : (
+                "Save"
+              )}
             </button>
           </div>
         )}
@@ -328,7 +340,6 @@ const Profile = () => {
           </p>
         )}
       </form>
-      <Toaster position="bottom-right" />
     </div>
   );
 };

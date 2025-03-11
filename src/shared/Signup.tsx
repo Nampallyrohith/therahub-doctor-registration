@@ -6,32 +6,29 @@ import emailIcon from "../assets/images/AuthenticationIcons/email-icon.png";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import { SignUpSchema } from "@/modals/typeDefinitions";
+import { ThreeDot } from "react-loading-indicators";
+import { signUpSchema } from "@/modals/schema";
 
-const schema = z
-  .object({
-    fullName: z.string().nonempty("Full Name is required"),
-    emailId: z.string().email("Invalid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+type Inputs = z.infer<typeof signUpSchema>;
 
-type Inputs = z.infer<typeof schema>;
+interface singupProps {
+  onSubmit: (data: SignUpSchema) => void;
+  loading: boolean;
+}
 
-const SignUp: React.FC = () => {
+const SignUp: React.FC<singupProps> = ({ onSubmit, loading }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const SignUpSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
+    onSubmit(data);
   };
 
   return (
@@ -49,7 +46,7 @@ const SignUp: React.FC = () => {
       <div className="w-11/12 md:w-3/4 lg:w-[400px] inset-6 flex items-center justify-center mt-5">
         <form
           className="flex flex-col gap-4 w-full"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(SignUpSubmit)}
         >
           {/* Full Name */}
           <div className="flex justify-between items-center bg-[#AAE9E3] rounded-full w-full h-12 text-orange-primary-1 pr-4">
@@ -68,14 +65,14 @@ const SignUp: React.FC = () => {
           {/* Email */}
           <div className="flex justify-between items-center bg-[#AAE9E3] rounded-full w-full h-12 text-orange-primary-1 pr-4">
             <input
-              {...register("emailId")}
+              {...register("email")}
               className="px-5 border-none outline-none focus:outline-none focus:ring-0 bg-transparent  placeholder-gray-600 text-gray-600 w-full"
               placeholder="Email Id"
             />
             <img src={emailIcon} alt="Icon" className="w-5  mr-4" />
           </div>
-          {errors.emailId?.message && (
-            <div className="text-red-500 text-xs">{errors.emailId.message}</div>
+          {errors.email?.message && (
+            <div className="text-red-500 text-xs">{errors.email.message}</div>
           )}
 
           {/* Password */}
@@ -108,10 +105,14 @@ const SignUp: React.FC = () => {
           {/* Submit Button */}
           <div className="text-center !mt-4 !mb-10">
             <Button
-              type="button"
+              type="submit"
               className="bg-[#ff9f1c] w-28 py-1 rounded-lg hover:bg-[#ff9f1c] cursor-pointer tracking-wider text-base hover:shadow-lg hover:scale-105 hover:ease-in-out hover:delay-200"
             >
-              Sign up
+              {loading ? (
+                <ThreeDot easing="ease-in" size="small" color="#fff" />
+              ) : (
+                "Sign up"
+              )}
             </Button>
           </div>
         </form>
