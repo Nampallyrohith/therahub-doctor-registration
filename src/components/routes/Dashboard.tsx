@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import Loader from "@/shared/Loader";
+import LeaveList from "@/shared/LeaveList";
 
 const Dashboard = () => {
   const {
@@ -72,7 +73,12 @@ const Dashboard = () => {
             loading={loadingProfile}
             doctorId={doctorId}
           />
-          {doctorResult && doctorResult.doctor.isProfile && <CalendarForm />}
+          {doctorResult && doctorResult.doctor.isProfile && (
+            <>
+              <CalendarForm />
+              <LeaveList />
+            </>
+          )}
         </div>
       )}
     </div>
