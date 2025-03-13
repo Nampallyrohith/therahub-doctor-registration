@@ -30,3 +30,15 @@ export interface Doctor {
 export interface DoctorProfile extends Doctor {
   isProfile: boolean;
 }
+
+export interface CalendarFormType {
+  title: string;
+  description: string;
+  dates: string;
+}
+
+export interface LeaveDatesDetails extends CalendarFormType {
+  status: "upcoming" | "previous" | "cancelled";
+  createdAt: string;
+  id: number;
+}
