@@ -26,8 +26,8 @@ const Profile: React.FC<profileProps> = ({
     "Doctor of Philosophy in Psychology",
   ];
   const TherapistID = [
-    "physodynamic",
-    "behavioral",
+    "psychodynamic",
+    "behavioural",
     "cognitiveBehavioural",
     "humanistic",
   ];
