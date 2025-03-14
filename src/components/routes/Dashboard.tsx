@@ -134,12 +134,20 @@ const Dashboard = () => {
           />
           {doctorResult && doctorResult.doctor.isProfile && (
             <>
+              <h1 className="text-lg md:text-2xl !mt-4">Leave application</h1>
+              <hr className="border-2 border-[#2ec4b6] rounded-full  !mb-5 w-36 mx-auto" />
               <CalendarForm onSubmit={handleCalendarForm} />
               {leaveDatesResult && (
-                <LeaveList
-                  leaveList={leaveDatesResult.leaveDetails}
-                  onDelete={handleCancelLeaveDate}
-                />
+                <>
+                  <h1 className="text-lg md:text-2xl !mt-4">
+                    Leave dates list
+                  </h1>
+                  <hr className="border-2 border-[#2ec4b6] rounded-full  !mb-5 w-36 mx-auto" />
+                  <LeaveList
+                    leaveList={leaveDatesResult.leaveDetails}
+                    onDelete={handleCancelLeaveDate}
+                  />
+                </>
               )}
             </>
           )}
