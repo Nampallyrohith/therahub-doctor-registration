@@ -1,9 +1,16 @@
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
+import { CalendarFormType } from "@/modals/typeDefinitions";
 
-const CalendarForm = () => {
+interface calendarFormProps {
+  onSubmit: (data: CalendarFormType) => void;
+}
+
+const CalendarForm: React.FC<calendarFormProps> = ({ onSubmit }) => {
   const [dates, setDates] = useState<Date[]>([]);
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
 
   // Disable Sundays, past dates, and dates beyond 20 days from today
   const isDateDisabled = (day: Date) => {
@@ -12,6 +19,20 @@ const CalendarForm = () => {
     const twentyDaysLater = new Date();
     twentyDaysLater.setDate(today.getDate() + 20);
     return day.getDay() === 0 || day < today || day > twentyDaysLater;
+  };
+
+  const handleSubmit = () => {
+    const data = {
+      title,
+      description,
+      dates: `[${dates
+        .map((date) => date.toLocaleDateString("en-CA"))
+        .join(", ")}]`,
+    };
+    onSubmit(data);
+    setDates([]);
+    setTitle("");
+    setDescription("");
   };
 
   return (
@@ -40,16 +61,19 @@ const CalendarForm = () => {
                 <input
                   type="text"
                   placeholder="Title of leave"
+                  onChange={(e) => setTitle(e.target.value)}
                   className="outline-none border-0 text-[#2CC3B4]  placeholder:text-[#2CC3B4]  focus:border-b-[#2CC3B4] rounded-none  border-b-2 border-b-[#2CC3B4] shadow-none"
                 />
                 <textarea
                   cols={6}
                   rows={4}
+                  onChange={(e) => setDescription(e.target.value)}
                   className="outline-none border text-[#2CC3B4] text-xs p-2 placeholder:text-[#2CC3B4]  focus:border-[#2CC3B4] rounded-lg
               border-b-2 border-[#2CC3B4] shadow-none"
                 ></textarea>
                 <Button
                   type="button"
+                  onClick={handleSubmit}
                   className="self-center shadow-inset bg-[#2CC3B4] hover:bg-[#2CC3B4] cursor-pointer hover:scale-105 hover:ease-in-out hover:delay-200"
                 >
                   Submit
@@ -59,7 +83,9 @@ const CalendarForm = () => {
           )}
         </div>
         <p className="text-[#2CC3B4] underline w-full">
-          {`Selected: ${dates.map((date) => date.toDateString()).join(", ")}`}
+          {`Selected: ${dates
+            .map((date) => date.toLocaleDateString("en-CA"))
+            .join(", ")}`}
         </p>
       </div>
     </div>

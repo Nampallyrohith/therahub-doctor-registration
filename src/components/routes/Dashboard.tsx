@@ -1,5 +1,10 @@
 import { useFetchData } from "@/hooks/apiCall";
-import { Doctor, DoctorProfile } from "@/modals/typeDefinitions";
+import {
+  CalendarFormType,
+  Doctor,
+  DoctorProfile,
+  LeaveDatesDetails,
+} from "@/modals/typeDefinitions";
 import CalendarForm from "@/shared/CalendarForm";
 import Header from "@/shared/Header";
 import Profile from "@/shared/Profile";
@@ -20,8 +25,27 @@ const Dashboard = () => {
   const { call: profileUpdateAPICaller, loading: loadingProfile } =
     useFetchData();
 
+  const { call: calendarFormAPICaller } = useFetchData();
+
+  const { call: fetchLeaveDetailsAPICaller, data: leaveDatesResult } =
+    useFetchData<{
+      leaveDetails: LeaveDatesDetails[];
+    }>();
+
+  const { call: cancelLeaveDatesAPICaller } = useFetchData();
+
   const navigate = useNavigate();
   const [doctorId, setDoctorId] = useState<string>("");
+
+  useEffect(() => {
+    if (doctorId) {
+      fetchLeaveDetails();
+    }
+  }, [doctorId]);
+
+  const fetchLeaveDetails = async () => {
+    await fetchLeaveDetailsAPICaller(`doctor/${doctorId}/leaves-dates`);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("doctorToken");
@@ -60,6 +84,41 @@ const Dashboard = () => {
       style: { backgroundColor: "#277d1b", color: "#fff" },
     });
   };
+
+  const handleCalendarForm = async (data: CalendarFormType) => {
+    console.log(data);
+    const response = await calendarFormAPICaller(
+      `doctor/${doctorId}/leaves-dates`,
+      "POST",
+      data
+    );
+
+    if (!response.ok) {
+      toast(response.error, {
+        position: "bottom-right",
+        style: { backgroundColor: "#eb3b41", color: "#fff" },
+      });
+      return;
+    }
+
+    toast("Added leave dates", {
+      position: "bottom-right",
+      style: { backgroundColor: "#277d1b", color: "#fff" },
+    });
+  };
+
+  const handleCancelLeaveDate = async (id: number) => {
+    if (doctorId) {
+      const result = await cancelLeaveDatesAPICaller(
+        `doctor/${doctorId}/cancel-leave-dates/${id}`,
+        "PUT"
+      );
+      if (result.ok) {
+        fetchLeaveDetails();
+      }
+    }
+  };
+
   return (
     <div className="w-full h-full">
       <Header />
@@ -75,8 +134,21 @@ const Dashboard = () => {
           />
           {doctorResult && doctorResult.doctor.isProfile && (
             <>
-              <CalendarForm />
-              <LeaveList />
+              <h1 className="text-lg md:text-2xl !mt-4">Leave application</h1>
+              <hr className="border-2 border-[#2ec4b6] rounded-full  !mb-5 w-36 mx-auto" />
+              <CalendarForm onSubmit={handleCalendarForm} />
+              {leaveDatesResult && (
+                <>
+                  <h1 className="text-lg md:text-2xl !mt-4">
+                    Leave dates list
+                  </h1>
+                  <hr className="border-2 border-[#2ec4b6] rounded-full  !mb-5 w-36 mx-auto" />
+                  <LeaveList
+                    leaveList={leaveDatesResult.leaveDetails}
+                    onDelete={handleCancelLeaveDate}
+                  />
+                </>
+              )}
             </>
           )}
         </div>
