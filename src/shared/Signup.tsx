@@ -15,9 +15,10 @@ type Inputs = z.infer<typeof signUpSchema>;
 interface singupProps {
   onSubmit: (data: SignUpSchema) => void;
   loading: boolean;
+  setIsLogin: (isBool: boolean) => void;
 }
 
-const SignUp: React.FC<singupProps> = ({ onSubmit, loading }) => {
+const SignUp: React.FC<singupProps> = ({ onSubmit, loading, setIsLogin }) => {
   const {
     register,
     handleSubmit,
@@ -117,6 +118,16 @@ const SignUp: React.FC<singupProps> = ({ onSubmit, loading }) => {
           </div>
         </form>
       </div>
+      <p className="text-sm gap-3 text-[#ff9f1c]">
+        Don't have an account{" "}
+        <button
+          type="button"
+          className="font-semibold hover:underline cursor-pointer pt-"
+          onClick={() => setIsLogin(true)}
+        >
+          Login
+        </button>
+      </p>
     </div>
   );
 };
