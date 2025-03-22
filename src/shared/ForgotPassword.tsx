@@ -58,7 +58,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
   return (
     <div className="lg:mt-28 flex flex-col items-center gap-5 w-full">
       <h1 className="text-2xl text-orange-primary-1">
-        {step === 1 ? "Forgot Password?" : "Reset Your Password"}
+        {step === 1 ? "Forgot Password" : "Reset Your Password"}
       </h1>
 
       <div className="w-11/12 md:w-3/4 lg:w-[400px] flex items-center justify-center mt-5">
@@ -76,8 +76,8 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
               <img src={emailIcon} alt="Email Icon" className="w-5 ml-3" />
             </div>
             {emailForm.formState.errors.email && (
-              <p className="text-red-500 text-xs">
-                {emailForm.formState.errors.email.message}
+              <p className="text-red-500 text-xs !ml-5">
+                *{emailForm.formState.errors.email.message}
               </p>
             )}
             <div className="flex flex-col items-center gap-2">
@@ -89,7 +89,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
               </Button>
               <button
                 type="button"
-                className="font-semibold underline cursor-pointer text-[#ff9f1c]"
+                className=" !my-4 underline cursor-pointer text-[#ff9f1c]"
                 onClick={() => setShowForgotPassword(false)}
               >
                 Return to Login
@@ -125,8 +125,8 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
                 {passwordForm.formState.errors[
                   field as keyof PasswordInputs
                 ] && (
-                  <p className="text-red-500 text-xs">
-                    {
+                  <p className="text-red-500 text-xs !ml-5">
+                    *{
                       passwordForm.formState.errors[
                         field as keyof PasswordInputs
                       ]?.message

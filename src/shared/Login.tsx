@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { LoginSchema } from "@/modals/typeDefinitions";
 import { ThreeDot } from "react-loading-indicators";
 import { loginSchema } from "@/modals/schema";
-import ForgotPassword from "../shared/forgotPassword";
+import ForgotPassword from "@/shared/ForgotPassword";
 
 type Inputs = z.infer<typeof loginSchema>;
 

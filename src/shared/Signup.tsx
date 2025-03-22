@@ -104,7 +104,7 @@ const SignUp: React.FC<singupProps> = ({ onSubmit, loading, setIsLogin }) => {
           </div>
 
           {/* Submit Button */}
-          <div className="text-center !mt-4 !mb-10">
+          <div className="text-center !my-4">
             <Button
               type="submit"
               className="bg-[#ff9f1c] w-28 py-1 rounded-lg hover:bg-[#ff9f1c] cursor-pointer tracking-wider text-base hover:shadow-lg hover:scale-105 hover:ease-in-out hover:delay-200"
@@ -122,7 +122,7 @@ const SignUp: React.FC<singupProps> = ({ onSubmit, loading, setIsLogin }) => {
         Don't have an account{" "}
         <button
           type="button"
-          className="font-semibold hover:underline cursor-pointer pt-"
+          className="font-semibold hover:underline cursor-pointer"
           onClick={() => setIsLogin(true)}
         >
           Login

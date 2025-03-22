@@ -111,13 +111,6 @@ const Authentication = () => {
             setIsLogin={setIsLogin}
           />
         )}
-        {/* <p className="text-sm gap-3 text-[#ff9f1c]">
-          {isLogin ? (
-            <>Don't have an account {Button("Sign up", false)}</>
-          ) : (
-            <>Already have an account {Button("Login", true)}</>
-          )}
-        </p> */}
         {signupSuccess && (
           <p className="text-green-500 bg-green-200 rounded-3xl border-2 p-4 !my-3 border-dotted">
             Your account successfully registered, Please Login now.
