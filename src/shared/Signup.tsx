@@ -15,9 +15,10 @@ type Inputs = z.infer<typeof signUpSchema>;
 interface singupProps {
   onSubmit: (data: SignUpSchema) => void;
   loading: boolean;
+  setIsLogin: (isBool: boolean) => void;
 }
 
-const SignUp: React.FC<singupProps> = ({ onSubmit, loading }) => {
+const SignUp: React.FC<singupProps> = ({ onSubmit, loading, setIsLogin }) => {
   const {
     register,
     handleSubmit,
@@ -103,7 +104,7 @@ const SignUp: React.FC<singupProps> = ({ onSubmit, loading }) => {
           </div>
 
           {/* Submit Button */}
-          <div className="text-center !mt-4 !mb-10">
+          <div className="text-center !my-4">
             <Button
               type="submit"
               className="bg-[#ff9f1c] w-28 py-1 rounded-lg hover:bg-[#ff9f1c] cursor-pointer tracking-wider text-base hover:shadow-lg hover:scale-105 hover:ease-in-out hover:delay-200"
@@ -117,6 +118,16 @@ const SignUp: React.FC<singupProps> = ({ onSubmit, loading }) => {
           </div>
         </form>
       </div>
+      <p className="text-sm gap-3 text-[#ff9f1c]">
+        Don't have an account{" "}
+        <button
+          type="button"
+          className="font-semibold hover:underline cursor-pointer"
+          onClick={() => setIsLogin(true)}
+        >
+          Login
+        </button>
+      </p>
     </div>
   );
 };

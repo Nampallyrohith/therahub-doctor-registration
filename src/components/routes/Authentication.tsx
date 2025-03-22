@@ -88,16 +88,6 @@ const Authentication = () => {
     }, 1000);
   };
 
-  const Button = (buttonText: string, isbool: boolean) => (
-    <button
-      type="button"
-      className="font-semibold hover:underline cursor-pointer"
-      onClick={() => setIsLogin(isbool)}
-    >
-      {buttonText}
-    </button>
-  );
-
   return (
     <div className="w-full h-screen">
       <div className="relative w-full ">
@@ -109,17 +99,18 @@ const Authentication = () => {
       </div>
       <div className="flex md:mt-10 flex-col justify-center items-center w-full h-full">
         {isLogin ? (
-          <Login onSubmit={handleLogin} loading={loginLoading} />
+          <Login
+            onSubmit={handleLogin}
+            loading={loginLoading}
+            setIsLogin={setIsLogin}
+          />
         ) : (
-          <SignUp onSubmit={handleSignUp} loading={signUpLoading} />
+          <SignUp
+            onSubmit={handleSignUp}
+            loading={signUpLoading}
+            setIsLogin={setIsLogin}
+          />
         )}
-        <p className="text-sm gap-3 text-[#ff9f1c]">
-          {isLogin ? (
-            <>Don't have an account {Button("Sign up", false)}</>
-          ) : (
-            <>Already have an account {Button("Login", true)}</>
-          )}
-        </p>
         {signupSuccess && (
           <p className="text-green-500 bg-green-200 rounded-3xl border-2 p-4 !my-3 border-dotted">
             Your account successfully registered, Please Login now.
