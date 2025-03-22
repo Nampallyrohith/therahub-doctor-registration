@@ -1,3 +1,6 @@
+import { z } from "zod";
+import { emailSchema, passwordSchema } from "./schema";
+
 export interface LoginSchema {
   email: string;
   password: string;
@@ -42,3 +45,6 @@ export interface LeaveDatesDetails extends CalendarFormType {
   createdAt: string;
   id: number;
 }
+
+export type EmailInputs = z.infer<typeof emailSchema>;
+export type PasswordInputs = z.infer<typeof passwordSchema>;

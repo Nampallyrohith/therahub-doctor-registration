@@ -6,10 +6,16 @@ import passwordIcon from "../assets/images/AuthenticationIcons/password-icon.png
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { LoginSchema } from "@/modals/typeDefinitions";
+import {
+  EmailInputs,
+  LoginSchema,
+  PasswordInputs,
+} from "@/modals/typeDefinitions";
 import { ThreeDot } from "react-loading-indicators";
 import { loginSchema } from "@/modals/schema";
 import ForgotPassword from "@/shared/ForgotPassword";
+import { useFetchData } from "@/hooks/apiCall";
+import { toast } from "sonner";
 
 type Inputs = z.infer<typeof loginSchema>;
 
@@ -21,6 +27,9 @@ interface loginProps {
 
 const Login: React.FC<loginProps> = ({ onSubmit, loading, setIsLogin }) => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+
+  const { call: forgotPasswordAPICaller, loading: forgotPasswordLoading } =
+    useFetchData();
 
   const {
     register,
@@ -35,10 +44,45 @@ const Login: React.FC<loginProps> = ({ onSubmit, loading, setIsLogin }) => {
     onSubmit(data);
   };
 
+  const handleForgotPassword = async (
+    email: EmailInputs,
+    passwords: PasswordInputs
+  ) => {
+    const body = {
+      email: email.email,
+      oldPassword: passwords.oldPassword,
+      newPassword: passwords.newPassword,
+    };
+    const response = await forgotPasswordAPICaller(
+      "doctor-authentication/forgot-password",
+      "PUT",
+      body
+    );
+    console.log(response);
+    if (!response.ok) {
+      toast(response.error, {
+        position: "bottom-right",
+        style: { backgroundColor: "#eb3b41", color: "#fff" },
+      });
+      return;
+    }
+    toast("Updated password successfully.", {
+      position: "bottom-right",
+      style: { backgroundColor: "#48bb78", color: "#fff" },
+    });
+    setTimeout(() => {
+      setShowForgotPassword(false);
+    }, 2000);
+  };
+
   return (
     <div className="self-center flex flex-col justify-center items-center gap-5 w-full">
       {showForgotPassword ? (
-        <ForgotPassword setShowForgotPassword={setShowForgotPassword} />
+        <ForgotPassword
+          handleForgotPassword={handleForgotPassword}
+          setShowForgotPassword={setShowForgotPassword}
+          forgotPasswordLoading={forgotPasswordLoading}
+        />
       ) : (
         <>
           <div className="flex flex-col justify-center items-center gap-3">

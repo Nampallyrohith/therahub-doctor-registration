@@ -37,3 +37,20 @@ export const signUpSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const emailSchema = z.object({
+  email: z.string().email("Invalid email"),
+});
+
+export const passwordSchema = z
+  .object({
+    oldPassword: z.string().min(1, "Old Password is required"),
+    newPassword: z
+      .string()
+      .min(8, "New Password must be at least 8 characters"),
+    confirmPassword: z.string().min(8, "Confirm Password must match"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });

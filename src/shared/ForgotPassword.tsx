@@ -1,44 +1,25 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import emailIcon from "../assets/images/AuthenticationIcons/email-icon.png";
 import passwordIcon from "../assets/images/AuthenticationIcons/password-icon.png";
-
-const emailSchema = z.object({
-  email: z.string().email("Invalid email"),
-});
-
-const passwordSchema = z
-  .object({
-    oldPassword: z.string().min(1, "Old Password is required"),
-    newPassword: z
-      .string()
-      .min(8, "New Password must be at least 8 characters"),
-    confirmPassword: z.string().min(8, "Confirm Password must match"),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-type EmailInputs = z.infer<typeof emailSchema>;
-type PasswordInputs = z.infer<typeof passwordSchema>;
+import { EmailInputs, PasswordInputs } from "@/modals/typeDefinitions";
+import { emailSchema, passwordSchema } from "@/modals/schema";
+import { ThreeDot } from "react-loading-indicators";
 
 interface ForgotPasswordProps {
-  onSubmit?: (data: PasswordInputs) => void;
-  loading?: boolean;
+  handleForgotPassword: (email: EmailInputs, passwords: PasswordInputs) => void;
   setShowForgotPassword: (isBool: boolean) => void;
+  forgotPasswordLoading: boolean;
 }
 
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({
-  onSubmit,
-  loading = false,
   setShowForgotPassword,
+  handleForgotPassword,
+  forgotPasswordLoading,
 }) => {
   const [step, setStep] = useState(1);
-  const [success, setSuccess] = useState(false);
 
   const emailForm = useForm<EmailInputs>({
     resolver: zodResolver(emailSchema),
@@ -48,11 +29,13 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
     resolver: zodResolver(passwordSchema),
   });
 
-  const handleEmailSubmit: SubmitHandler<EmailInputs> = () => setStep(2);
+  const handleEmailSubmit: SubmitHandler<EmailInputs> = () => {
+    if (!emailForm.formState.errors.email) {
+      setStep(2);
+    }
+  };
   const handlePasswordSubmit: SubmitHandler<PasswordInputs> = (data) => {
-    onSubmit?.(data);
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), 3000);
+    handleForgotPassword(emailForm.getValues(), data);
   };
 
   return (
@@ -87,13 +70,6 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
               >
                 Next
               </Button>
-              <button
-                type="button"
-                className=" !my-4 underline cursor-pointer text-[#ff9f1c]"
-                onClick={() => setShowForgotPassword(false)}
-              >
-                Return to Login
-              </button>
             </div>
           </form>
         ) : (
@@ -126,7 +102,8 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
                   field as keyof PasswordInputs
                 ] && (
                   <p className="text-red-500 text-xs !ml-5">
-                    *{
+                    *
+                    {
                       passwordForm.formState.errors[
                         field as keyof PasswordInputs
                       ]?.message
@@ -139,18 +116,25 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({
               <Button
                 type="submit"
                 className="bg-[#ff9f1c] w-28 py-1 rounded-lg hover:bg-[#ff9f1c]"
+                disabled={forgotPasswordLoading}
               >
-                {loading ? "Loading..." : "Submit"}
+                {forgotPasswordLoading ? (
+                  <ThreeDot easing="ease-in" size="small" color="#fff" />
+                ) : (
+                  "Submit"
+                )}
               </Button>
             </div>
           </form>
         )}
       </div>
-      {success && (
-        <div className="bg-green-500 text-white text-sm p-2 rounded-md mt-3">
-          ✅ Password updated successfully!
-        </div>
-      )}
+      <button
+        type="button"
+        className=" !my-4 underline cursor-pointer text-[#ff9f1c]"
+        onClick={() => setShowForgotPassword(false)}
+      >
+        Return to Login
+      </button>
     </div>
   );
 };
