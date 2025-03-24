@@ -52,7 +52,7 @@ const LeaveTabs: React.FC<LeaveListProps> = ({ leaveList, onDelete }) => {
             return (
               <div
                 key={leaveItem.id}
-                className={`bg-[#fff8ee] p-4 rounded-lg shadow relative ${
+                className={`bg-[#fff8ee] p-4 rounded-lg shadow relative break-words ${
                   leaveItem.status === "upcoming"
                     ? "border-0 border-l-8 border-l-[#2ec4b6] bg-white text-[#2ec4b6]"
                     : leaveItem.status === "cancelled"
