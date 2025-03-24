@@ -38,9 +38,9 @@ const LeaveTabs: React.FC<LeaveListProps> = ({ leaveList, onDelete }) => {
 
       {/* Leave Items */}
       {filterLeaveDates.length === 0 ? (
-        <div className="flex flex-col justify-center h-full w-full items-center gap-4 !my-20">
+        <div className="flex flex-col justify-center h-full w-full items-center gap-4 !my-20 ">
           <img src={emptyBox} alt="empty icon" className="w-14" />
-          <p className="text-[#FF9F1C] text-sm">
+          <p className="text-[#FF9F1C] text-sm ">
             You don't have any {activeTab} leave dates
           </p>
         </div>
@@ -52,7 +52,7 @@ const LeaveTabs: React.FC<LeaveListProps> = ({ leaveList, onDelete }) => {
             return (
               <div
                 key={leaveItem.id}
-                className={`bg-[#fff8ee] p-4 rounded-lg shadow relative ${
+                className={`bg-[#fff8ee] p-4 rounded-lg shadow relative break-words ${
                   leaveItem.status === "upcoming"
                     ? "border-0 border-l-8 border-l-[#2ec4b6] bg-white text-[#2ec4b6]"
                     : leaveItem.status === "cancelled"
